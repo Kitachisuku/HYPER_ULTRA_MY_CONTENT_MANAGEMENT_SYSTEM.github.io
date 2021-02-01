@@ -1,0 +1,74 @@
+body{
+    /*user-select: none;  /*文字を選択不可能にする*/
+    background-color: rgb(54, 55, 58);  /*この色は完全に自分の趣味*/
+}
+input.cmsItems{
+    margin-top: 10px;   /*余白を設定*/
+}
+div.cmsbody{
+    border: 5px double rgb(129, 198, 207);    /*見やすくするために区切りを作る*/
+    background-color: white;    /*とりあえず最初のじょうあちは白いサイトにしておく*/
+    color: black;   /*背景と合わせる*/
+    top: 20px;   /*上から20px*/
+    bottom: 90px;  /*丁度いい大きさにする*/
+    overflow: auto; /*内容に応じてスクロール可能にする*/
+    position: absolute; /*座標を絶対指定に*/
+    left: 0px;  /*表示位置を左に*/
+    right: 250px;   /*widthの代わり*/
+}
+div.bottomDesign{
+    opacity: 0.9;
+    background: linear-gradient(rgb(54, 55, 58),rgb(0,0,0));    /*グラデーション*/
+    width: 100%;    /*横幅はページの大きさと同じにする*/
+    height: 80px;   /*高さを設定*/
+    left: 0px;  /*ちゃんとした位置に表示されるように設定*/
+    bottom: 0px;    /*上同*/
+    position: fixed;    /*位置を固定する*/
+    color: silver;  /*フォントの色を銀色に設定*/
+    font-size: large;   /*フォントを大きめに設定*/
+    text-align: center; /*文字を中央ぞろえに*/
+    font-family: 'Courier New', Courier, monospace; /*フォントをmonospace系統に設定*/
+}
+details.cssmenu{
+    position: absolute; /*座標を絶対指定に*/
+    right: 0px;    /*右から10pxのとこに配置*/
+    width: 240px;    /*大きさを60pxに*/
+}
+summary.cssmenu{
+    background-color: dimgray;  /*背景色を濃い目のグレーに*/
+    border: 2px solid gray; /*枠線をグレーに*/
+    outline: none;  /*クリックしたときに出る線をなくす*/
+    color: white;  /*文字色を白にする*/
+}
+div.menus{
+    background-color: rgb(43, 43, 43);  /*背景色を結構濃いめのグレーにする*/
+    border: 2px solid rgb(12, 12, 12);  /*枠線をグレーにする*/
+    height: 250px;  /*高さを300pxに設定*/
+    color: white;   /*文字色を白に設定*/
+    overflow: auto; /*スクロールする*/
+}
+details.tagmenu{
+    position: absolute; /*座標を絶対指定に*/
+    right: 0px;    /*右から10pxのとこに配置*/
+    top: 40px;  /*上から50pxのとこに配置*/
+    width: 240px;    /*大きさを60pxに*/
+}
+summary.tagmenu{
+    user-select: none;  /*文字を選択不可能にする*/
+    background-color: dimgray;  /*背景色を濃い目のグレーに*/
+    border: 2px solid gray; /*枠線をグレーに*/
+    outline: none;  /*クリックしたときに出る線をなくす*/
+    color: white;  /*文字色を白にする*/
+}
+.editTextArea{
+    height: 5em;    /*高さを文字3つ分にする*/
+    overflow: scroll; /*入力欄の中身が4行以上になったときにスクロールする*/
+    resize: none;   /*リサイズ禁止にする*/
+}
+button.exportButton{
+    position: absolute; /*座標を絶対指定に*/
+    right: 10px;    /*右から10pxのとこに配置*/
+    width: 230px;    /*大きさを60pxに*/
+    bottom: 150px;  /*位置を調節*/
+    z-index: -1;
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+    <head>
+        <title>Hyper Ultra My Content Management System</title>
+        <meta http-equiv="content-type" charset="utf-8">
+        <link rel="stylesheet" href="style.css">
+        <!--rgbcolor.js
+            
+            English(英語)
+            By Alexey. His github link is https://gist.github.com/alhimik45.
+            and, this library link is https://gist.github.com/alhimik45/c86d1e614e48980962dac30b1467f0e0.
+            Thanks.
+            
+            日本語(Japanese)
+            Alexeyさんが作りました。Alexeyさんのgithubのリンクはこれです https://gist.github.com/alhimik45。
+            そして、このライブラリのリンクはhttps://gist.github.com/alhimik45/c86d1e614e48980962dac30b1467f0e0です。
+            ありがとうございます。-->
+        <script src="https://www.phpied.com/files/rgbcolor/rgbcolor.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>
+            <!--編集部分-->
+            <details class="cssmenu" id="cssmenu">
+                <summary class="cssmenu">CSSなどを編集</summary>
+                <div class="menus">
+                    <!--文字色選択-->
+                    <div>
+                        <p>文字色を選択</p>
+                        <input type="color" id="foreColorChooser" value="#000000" onchange="onChangeForeColor()">
+                    </div>
+                    <hr>
+                    
+                    <!--背景色選択-->
+                    <div>
+                        <p>背景色を選択</p>
+                        <input type="color" id="backColorChooser" value="#FFFFFF" onchange="onChangeBackground()">
+                    </div>
+                    <!--線で分ける-->
+                    <hr>
+
+                    <!--文字色選択-->
+                    <div>
+                        <p>文字の並びを選択</p>
+                        <select id="cmsTextAlign" onchange="changeTextAlign()">
+                            <option value="left">左ぞろえ</option>
+                            <option value="center">中央ぞろえ</option>
+                            <option value="right">右ぞろえ</option>
+                        </select>
+                    </div>
+                    <hr>
+                </div>
+            </details>
+
+            <!--テキスト追加部分-->
+            <details class="tagmenu" id="tagmenu">
+                <summary class="tagmenu">本文を編集</summary>
+                <div class="menus">
+                    <!--背景色選択-->
+                    <div>
+                        <p>テキスト要素を追加</p>
+                        <input type="text" id="tagText" placeholder="入力するテキスト" style="width: 120px;">
+                        <input type="text" id="tagId" placeholder="ID" style="width: 120px;">
+                        文字色<input type="color" id="tagForeColor" value="#000000"><br>
+                        背景色<input type="color" id="tagBackColor" value="#FFFFFF"><br>
+                        
+                        <!--設定部分-->
+                        <select id="textType">
+                            <option>段落(P要素)</option>
+                            <option>まとまり(div要素)</option>
+                            <option>見出し1(h1要素)</option>
+                            <option>見出し2(h2要素)</option>
+                            <option>見出し3(h3要素)</option>
+                            <option>見出し4(h4要素)</option>
+                            <option>見出し5(h5要素)</option>
+                            <option>見出し6(h6要素)</option>
+                        </select>
+                        <input type="button" value="本文に追加" onclick="addTag()" style="margin-top: 10px;">
+                    </div>
+                    <hr>
+                    要素を編集<br>
+                    テキスト<br><textarea id="editingElemText" placeholder="テキスト無し" class="editTextArea" wrap="soft" onkeyup="changeData()"></textarea><br>
+                    id<br><input type="text" id="editingElemId" placeholder="ID無し" onkeyup="changeID()"><br>
+                    文字色<input type="color" id="editingElemFColor" value="#000000"><br>
+                    背景色<input type="color" id="editingElemBColor" value="#FFFFFF"><br>
+                    <input type="button" value="変更" id="editingDoneButton" onclick="changeEditData()" disabled><br>
+                    <input type="button" value="要素を削除" id="editingDelButton" onclick="deleteSelectedElement()" disabled>
+                </div>
+            </details>
+
+            <button type="button" class="exportButton" onclick="exoprtHTML()">HTML出力</button>
+        </div>
+        <!--編集する部分なので特に何もしない-->
+        <div class="cmsbody" id="cmsbody"></div>
+        <!--下のデザイン(つまりCopyRight)-->
+        <div class="bottomDesign">
+            <br>
+            Hyper Ultra My Content Management System!
+            <br>
+            &copy; Kitachisuku 2021-February
+        </div>
+        <script src="main.js"></script>
+    </body>
+</html>
