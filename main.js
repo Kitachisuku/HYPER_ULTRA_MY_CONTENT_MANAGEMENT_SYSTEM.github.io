@@ -151,6 +151,152 @@ function addTag()
     }
 }
 
+//  読み込み用
+function openFile()
+{
+    //  XMLデータ保存用の変数
+    let data = "";
+
+    //  ファイル属性を作成
+    let fd = document.createElement('input');
+
+    //  種類を設定
+    fd.type = 'file';
+
+    //  読み込む動作
+    fd.addEventListener('change',function(e) {
+        
+        //  ファイルを特定
+        let file = e.target.files[0];
+
+        //  FileReader作成
+        let fr = new FileReader();
+
+        data = fr.readAsText(file);
+
+        //  読み込む設定
+        fr.addEventListener('load',function(){
+
+            //  XMLデータ取得
+            data = fr.result;
+
+            //  パルサーを作成
+            let parser = new DOMParser();
+
+            //  読み込み用のもの作成
+            let dom = parser.parseFromString(data,"text/xml");
+
+            //  読み込んでいく前に初期化
+            //  とりあえず取得
+            let cmsData = document.getElementById('cmsbody');
+
+            //  変更していく
+            //  まずデータをなくす
+            cmsData.innerHTML = "";
+
+            //  次にCSSを読み込んでいく
+            let bgcolor = dom.getElementsByTagName('background')[0].attributes.color.textContent;
+
+            //  2つデータがあるのでデータを保存しておく
+            let text = dom.getElementsByTagName('text')[0].attributes;
+
+            //  そして読み込む
+            let forecolor = text.color.textContent;
+            let align = text.align.textContent;
+
+            //  反映
+            //  背景
+            datas[0][0][0] = document.getElementById('backColorChooser').text = bgcolor;
+
+            //  文字色
+            datas[0][0][1] = document.getElementById('foreColorChooser').value = forecolor;
+
+            //  文字の並び
+            datas[0][0][2] = document.getElementById('cmsTextAlign').options.value = align;
+
+            //  反映
+            onChangeForeColor();
+            onChangeBackground();
+            changeTextAlign();
+
+            //  ここから本文を読み込んでいく
+            //  色々取得
+            let docChild = dom.getElementsByTagName('main')[0].children;
+            let docLen = docChild.length;
+
+            for(i = 0;i < docLen;i++)
+            {
+                //  タグを生成
+                let tag = document.createElement(docChild[i].nodeName);
+
+                //  テキスト反映
+                tag.innerHTML = docChild[i].attributes.html.textContent;
+
+                //  ID反映
+                if(docChild[i].attributes.getNamedItem('id') != null) tag.id = docChild[i].attributes.id.textContent;
+
+                //  文字色反映
+                if(docChild[i].attributes.getNamedItem('color') != null) tag.style.color = docChild[i].attributes.color.textContent;
+
+                //  背景色反映
+                if(docChild[i].attributes.getNamedItem('bgcolor') != null) tag.style.backgroundColor = docChild[i].attributes.bgcolor.textContent;
+
+                //  編集可能にする
+                tag.contentEditable = 'true';
+
+                //  使いまわし
+                tag.onkeyup = function(){
+                    document.getElementById('editingElemText').value = tag.innerHTML;
+                };
+        
+                //  クリック時の処理
+                tag.onclick = function(){
+                    //  テキストを反映
+                    document.getElementById('editingElemText').value = tag.innerHTML;
+        
+                    //  IDを反映
+                    document.getElementById('editingElemId').value = tag.id;
+        
+                    //  rgbcolor.jsを使う
+                    //  文字色が指定されている場合は反映
+                    if(tag.style.color != "")
+                    {
+                        let fcolor = new RGBColor(tag.style.color);
+                        document.getElementById('editingElemFColor').value = fcolor.toHex();
+                    }else
+                    {
+                        document.getElementById('editingElemFColor').value = getDatas("forecolor");
+                    }
+                    
+                    //  背景色が指定されている場合は反映
+                    if(tag.style.backgroundColor != "")
+                    {
+                        let bcolor = new RGBColor(tag.style.backgroundColor);
+                        document.getElementById('editingElemBColor').value = bcolor.toHex();
+                    }else
+                    {
+                        document.getElementById('editingElemBColor').value = getDatas("backcolor");
+                    }
+        
+                    //  ボタンを有効にしておく
+                    document.getElementById('editingDoneButton').disabled = false;
+                    document.getElementById('editingDelButton').disabled = false;
+        
+                    //  選択中の要素設定
+                    nowSelectedElement = tag;
+                };
+        
+
+                //  追加
+                document.getElementById('cmsbody').appendChild(tag);
+            }
+        });
+    });
+
+    //  開く
+    fd.click();
+}
+
 //  HTML出力用
 function exoprtHTML()
 {
@@ -161,7 +307,7 @@ function exoprtHTML()
     let docLen = docChild.length;
 
     //  テキスト部分定義
-    let text = '<!DOCTYPE html>\n<head>\n<title>Test</title>\n<meta charset="utf-8">\n</head>\n<body>';
+    let text = '<!DOCTYPE html>\n<head>\n<title></title>\n<meta charset="utf-8">\n</head>\n<body>';
 
     //  くりかえしで要素を作成
     for(i = 0;i < docLen;i++)
@@ -248,6 +394,7 @@ function saveFile()
 {
     //  基盤部分を作成
     let data = '<?xml version="1.0" encoding="UTF-8" ?>\n'
+                + '<cms>\n'
                 + '<css>\n';
     
     //  まず背景色
@@ -281,16 +428,17 @@ function saveFile()
         //  styleを入れる
         if(docChild[i].style.backgroundColor != "" || docChild[i].style.color != "")
         {
+            //  rgbcolor.jsを使う
             //  背景色
             if(docChild[i].style.backgroundColor != "")
             {
-                data += ' bgcolor="' + getDatas("backcolor") + '"';
+                data += ' bgcolor="' + new RGBColor(docChild[i].style.backgroundColor).toHex() + '"';
             }
 
             //  文字色
             if(docChild[i].style.color != "")
             {
-                data += ' color="' + getDatas("forecolor") + '"';
+                data += ' color="' + new RGBColor(docChild[i].style.color).toHex() + '"';
             }
         }
 
@@ -299,7 +447,9 @@ function saveFile()
     }
 
     //  閉じる
-    data += "</main>";
+    data += "</main>\n";
+
+    data += "</cms>";
 
     //  そして保存
 
