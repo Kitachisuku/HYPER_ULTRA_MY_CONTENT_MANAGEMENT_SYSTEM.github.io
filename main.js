@@ -8,7 +8,9 @@ var datas = [
             //  datas[0][0][0]  背景色
             "#FFFFFF",
             //  datas[0][0][1]  文字色
-            "#000000"
+            "#000000",
+            //  datas[0][0][2] テキストのならび
+            "left"
         ]
     ]
 ];
@@ -241,6 +243,101 @@ function exoprtHTML()
     }
 }
 
+//  ファイル保存用
+function saveFile()
+{
+    //  基盤部分を作成
+    let data = '<?xml version="1.0" encoding="UTF-8" ?>\n'
+                + '<css>\n';
+    
+    //  まず背景色
+    data += '<background color="' + getDatas("backcolor") + '" />\n';
+
+    //  次に文字色と並び
+    data += '<text color="' + getDatas("forecolor") + '" align="' + getDatas("txAlig") +'" />\n';
+
+    //  CSSタグを閉じる
+    data += "</css>\n";
+
+    //  次に本文
+    data += "<main>\n";
+
+    //  情報を保存
+    let docChild = document.getElementById('cmsbody').children;
+    let docLen = docChild.length;
+
+    //  どんどんタグを入れていく
+    for(i = 0;i < docLen;i++)
+    {
+        //  テキスト編集用の部分を取り除く
+        docChild[i].removeAttribute("contenteditable");
+
+        //  まず追加
+        data += '<' + docChild[i].nodeName + ' html="' + docChild[i].innerHTML + '"';
+
+        //  IDを入れる
+        if(docChild[i].id != "") data += ' id="' + docChild[i].id + '"';
+
+        //  styleを入れる
+        if(docChild[i].style.backgroundColor != "" || docChild[i].style.color != "")
+        {
+            //  背景色
+            if(docChild[i].style.backgroundColor != "")
+            {
+                data += ' bgcolor="' + getDatas("backcolor") + '"';
+            }
+
+            //  文字色
+            if(docChild[i].style.color != "")
+            {
+                data += ' color="' + getDatas("forecolor") + '"';
+            }
+        }
+
+        //  閉じる
+        data += " />\n"
+    }
+
+    //  閉じる
+    data += "</main>";
+
+    //  そして保存
+
+    //  ファイル名定義
+    const filename = "save.xml";
+
+    //  ダウンロードを開始
+    if(navigator.msSaveBlob)
+    {
+        navigator.msSaveBlob(new Blob([data],{type: "text/plain"}),filename);
+    }else
+    {
+        //  ダウンロード要素を作成
+        let a = document.createElement('a');
+
+        //  URLを作成
+        a.href = URL.createObjectURL(new Blob([data],{type: "text/plain"}));
+
+        //  ダウンロードするファイル名を指定
+        a.download = filename;
+
+        //  FireFox用
+        document.body.appendChild(a);
+
+        a.click();
+
+        //  FireFox用
+        document.body.removeChild(a);
+    }
+
+    //  生成用でconetnteditableを変更したのでそれを治す
+    for(i = 0;i < docLen;i++)
+    {
+        //  テキスト編集用の部分を取り除く
+        docChild[i].contentEditable = "true";
+    }
+}
+
 //  要素を削除する用
 function deleteSelectedElement()
 {
@@ -285,8 +382,12 @@ function changeEditData()
 //  テキストの並びを変更する用
 function changeTextAlign()
 {
+    //  現在のデータを取得
     let align = document.getElementById('cmsTextAlign').value;
     document.getElementById('cmsbody').style.textAlign = align;
+
+    //  次に反映
+    datas[0][0][2] = align;
 }
 
 //  メニューを見やするくする用
@@ -314,6 +415,8 @@ function getDatas(text)
             return datas[0][0][0];
         case "forecolor":
             return datas[0][0][1];
+        case "txAlig":
+            return datas[0][0][2];
     }
     return "None";
 }

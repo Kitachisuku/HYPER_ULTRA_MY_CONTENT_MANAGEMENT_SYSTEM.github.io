@@ -69,6 +69,20 @@ button.exportButton{
     position: absolute; /*座標を絶対指定に*/
     right: 10px;    /*右から10pxのとこに配置*/
     width: 230px;    /*大きさを60pxに*/
+    bottom: 90px;  /*位置を調節*/
+    z-index: -1;
+}
+button.openButton{
+    position: absolute; /*座標を絶対指定に*/
+    right: 10px;    /*右から10pxのとこに配置*/
+    width: 230px;    /*大きさを60pxに*/
+    bottom: 120px;  /*位置を調節*/
+    z-index: -1;
+}
+button.saveButton{
+    position: absolute; /*座標を絶対指定に*/
+    right: 10px;    /*右から10pxのとこに配置*/
+    width: 230px;    /*大きさを60pxに*/
     bottom: 150px;  /*位置を調節*/
     z-index: -1;
 }
